@@ -17,12 +17,22 @@ public class mape<Key extends Comparable<?super Key>, Value> {
             this.nullFlag = nullFlag;
         }
 
+        public Node(boolean nullFlag, boolean color, 
+                    Node leftChild, Node rightChild, Node parent, 
+                    Key key, Value value){
+            this.nullFlag = nullFlag;
+            this.leftChild = leftChild;
+            this.rightChild = rightChild;
+            this.parent = parent;
+            this.key = key;
+            this.value = value;
+            this.color = color;
+        }
 
 		public void setParent(Node parent) {
 			this.parent = parent;
 		}
 
-	
 		public Node getParent() {
 			return parent;
 		}
@@ -78,6 +88,19 @@ public class mape<Key extends Comparable<?super Key>, Value> {
         nullNode = new Node(true);
         nullNode.setColor(BLACK);
         root = nullNode;
+    }
+    public void copy(mape<Key, Value> newMape, mape<Key, Value> oldMape){
+        newMape.root = copyNode(newMape.root, oldMape.root);
+    }
+    // метод копирования
+    private Node copyNode(Node mapeNodeToCopy, Node oldMapeNode) {
+        if(oldMapeNode != null){
+            Node newMapeNode = new Node(oldMapeNode.nullFlag, oldMapeNode.color, oldMapeNode.leftChild, oldMapeNode.rightChild, oldMapeNode.parent, oldMapeNode.key, oldMapeNode.value);
+            newMapeNode.leftChild = copyNode(newMapeNode.leftChild, oldMapeNode.leftChild);
+            newMapeNode.rightChild = copyNode(newMapeNode.rightChild, oldMapeNode.rightChild);
+            return newMapeNode;
+        }
+        return null;
     }
 
     // возвращает корень дерева
@@ -140,17 +163,23 @@ public class mape<Key extends Comparable<?super Key>, Value> {
         return false;
     }
 
+    // добавление узла ключ-значение
     public void addPair(Key key, Value value){
+        // если ключ или значение =null: выкидываем исключение
         if (key == null || value == null) throw new IllegalArgumentException("invalid parameters.");
         Node localRoot = root;
         Node nN = nullNode;
+        // пока не дойдем до значения null в bst
         while(!localRoot.isNull()){
             nN = localRoot;
+            // если ключ схож с ключем сравниваемого, то обновляем значение узла
             if (key.compareTo(localRoot.getKey()) == 0){
                 localRoot.setValue(value);
                 return;
+            // если ключ меньше ключа узла, переходим к левому ребенку
             } else if (key.compareTo(localRoot.getKey()) < 0){
                 localRoot = localRoot.getLeftChild();
+            // иначе переходим на правого ребенка
             } else {
                 localRoot = localRoot.getRightChild();
             }
