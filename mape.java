@@ -1,4 +1,3 @@
-package RBTreeMap;
 
 public class mape<Key extends Comparable<?super Key>, Value> {
     private static final boolean RED = true;
@@ -91,6 +90,7 @@ public class mape<Key extends Comparable<?super Key>, Value> {
     }
     public void copy(mape<Key, Value> newMape, mape<Key, Value> oldMape){
         newMape.root = copyNode(newMape.root, oldMape.root);
+        System.out.println("Tree copied");
     }
     // метод копирования
     private Node copyNode(Node mapeNodeToCopy, Node oldMapeNode) {
